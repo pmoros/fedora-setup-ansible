@@ -1,0 +1,95 @@
+---
+- name: fedora base setup
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: true
+  tasks:
+# install fish terminal
+    - name: install fish
+      dnf:
+        name: fish
+        state: latest    
+    - name: install linux user utils
+      dnf:
+        name: util-linux-user
+        state: latest      
+    - name: set fish as the default terminal
+      command: chsh -s /usr/bin/fish
+# install compilers and interpreters
+    - name: install dev tools
+      dnf:
+        name: "@development-tools"
+        state: present
+    - name: install nodejs
+      dnf:
+        name: nodejs
+        state: latest
+    - name: install golang
+      dnf:
+        name: golang-bin
+        state: latest
+    - name: install scala
+      dnf:
+        name: scala
+        state: latest
+    - name: install pypy
+      dnf:
+        name: pypy
+        state: latest             
+# install basic text editors        
+    - name: install vim
+      dnf:
+        name: vim
+        state: latest        
+    - name: install geany
+      dnf:
+        name: geany
+        state: latest
+    - name: install pip
+      dnf:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+          - python3-pip
+          - python3-devel        
+# install password managers        
+    - name: install cli password manager
+      dnf:
+        name: gopass
+        state: present     
+# install programming languages tools          
+    - name: install flex
+      dnf:
+        name: flex
+        state: latest
+    - name: install bison
+      dnf:
+        name: bison
+        state: latest        
+# install snap and support for classic snap tools        
+    - name: install snap
+      dnf:
+        name: snapd
+        state: latest
+    - name: enable --classic snap support
+      command: ln -s /var/lib/snapd/snap /snap
+# install flatpak
+    - name: install flatpak
+      dnf:
+        name: flatpak
+        state: latest
+    - name: enable the Flathub remote
+      command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo      
+# necessary to allow changes to affect current user      
+    - name: reset ssh connection 
+      meta: reset_connection
+# important programs that are installed by default in Fedora:
+# - ansible
+# - java
+# - git
+# - boxes (virtual machines)
+# Next programs should be installed manually:
+# - Docker Desktop
+# - Anaconda

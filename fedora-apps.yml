@@ -1,0 +1,86 @@
+---
+- name: fedora apps setup
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: true
+  tasks:
+    - name: install basic dnf packages
+      dnf:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+          - chromium
+          - transmission
+          - libappindicator-gtk3
+          - python3-psutil
+          - gnome-tweaks      
+          - calibre
+  # install care apps
+    - name: install safeeyes
+      pip:
+        name: safeeyes  
+  # install media apps
+    - name: install vlc media player
+      command: sudo snap install vlc  
+    - name: install spotify
+      command: sudo flatpak install flathub com.spotify.Client
+  # install code editors
+    - name: install vscode
+      command: sudo snap install code --classic
+  # install design and testing tools       
+    - name: install diagrams tool Dia
+      dnf:
+        name: dia
+        state: latest
+    - name: install api testing tool postman
+      command: sudo snap install postman
+  # install aditional programming interpreters and tools
+    - name: install prolog
+      command: sudo snap install swi-prolog    
+    - name: install circleci
+      command: sudo snap install circleci
+    - name: install k8 kubernetes distro
+      command: sudo snap install microk8s --classic
+  # install notes apps and markdown editors
+    - name: install notes apps and markdown editors
+      command: "sudo snap install {{ item }}"
+      loop:
+        - xournalpp
+        - typora
+        - joplin-desktop        
+  # install media production tools
+    - name: install media production tools
+      command: "sudo snap install {{ item }}"
+      loop:
+        - audacity
+        - obs-studio         
+    - name: install shotcut
+      command: sudo snap install shotcut --classic
+  # install image editing tools      
+    - name: install krita
+      command: sudo snap install krita
+    - name: install inkscape
+      command: sudo snap install inkscape
+    - name: install image editors
+      dnf:
+        name: "{{ packages }}"
+        state: latest   
+      vars:
+        packages:
+          - gimp
+          - shutter
+  # install database editors and managers
+    - name: install mysql workbench
+      command: sudo snap install mysql-workbench-community
+    - name: install beekeeper
+      command: sudo snap install beekeeper-studio
+  # install jetbrains community ides versions
+    - name: install intellij
+      command: sudo snap install intellij-idea-community --classic
+    - name: install pycharm
+      command: sudo snap install pycharm-community --classic   
+# Next programs should be installed manually:
+# - MongoDB Compass
+# - JMeter
